@@ -1,3 +1,5 @@
+// Iniciando projeto Store Manager
+
 const express = require('express');
 
 const app = express();
