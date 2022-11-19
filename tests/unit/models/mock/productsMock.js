@@ -13,4 +13,10 @@ const products = [
   },
 ];
 
-module.exports = { products };
+const insertProducts = [
+  {
+    insertId: 1,
+  }
+]
+
+module.exports = { products, insertProducts };
