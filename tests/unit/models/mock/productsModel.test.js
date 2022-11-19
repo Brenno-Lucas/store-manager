@@ -8,9 +8,7 @@ const sinon = require('sinon');
 describe('Models tests', function () {
   it('Test findAll function', async function () {
     sinon.stub(connection, "execute").resolves([mock.products]);
-
     const result = await productModel.findAll();
-
     expect(result).to.be.deep.equal(mock.products);
   });
 
