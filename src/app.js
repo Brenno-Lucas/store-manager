@@ -4,6 +4,9 @@ const express = require('express');
 const productsModel = require('./models/products.model');
 const productsService = require('./services/products.service');
 const productController = require('./controllers/products.controller');
+const salesController = require('./controllers/sales.controller');
+const salesService = require('./services/sales.service');
+const salesModel = require('./models/sales.models');
 
 const app = express();
 app.use(express.json());
@@ -18,7 +21,7 @@ app.get('/', (_request, response) => {
 // você deve usar o arquivo index.js para executar sua aplicação 
 
 app.get('/products', async (_req, res) => {
-  const data = await productsModel.findAll();
+  const data = await productsModel.findAll('products');
   res.status(200).json(data);
 });
 
@@ -39,6 +42,22 @@ app.post('/products', async (req, res) => {
   }
   const id = await productsModel.insert(body);
   res.status(201).json({ id, name });
+});
+
+app.post('/sales', async (req, res) => {
+  const { body } = req;
+  const bodySucess = salesController.validInsert(body);
+  if (!bodySucess.type) {
+    return res.status(bodySucess.error)
+      .json({ message: bodySucess.message });
+  }
+  const idSucess = await salesService.validID(body);
+  if (!idSucess.type) return res.status(idSucess.error).json({ message: idSucess.message });
+  const insertID = await productsModel.findAll('sales');
+  const sale = await salesModel.insertSale(insertID.length + 1);
+  await salesModel.insertSaleProduct(body, sale);
+  const responseOk = { id: sale, itemsSold: body };
+  return res.status(201).json(responseOk);
 });
 
 module.exports = app;
