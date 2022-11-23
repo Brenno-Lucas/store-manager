@@ -32,4 +32,4 @@ const validInsert = (body) => {
   return { type: true };
 };
 
-module.exports = { validInsert };
+module.exports = { validKey, validInsert };
