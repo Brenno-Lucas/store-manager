@@ -44,6 +44,21 @@ app.post('/products', async (req, res) => {
   res.status(201).json({ id, name });
 });
 
+app.get('/sales', async (_req, res) => {
+  const response = await salesModel.findAllSales();
+  res.status(200).json(response);
+});
+
+app.get('/sales/:saleId', async (req, res) => {
+  const { saleId } = req.params;
+  const isIdCorrect = await salesService.validSaleId(saleId);
+  if (!isIdCorrect.type) {
+    return res.status(isIdCorrect.error).json({ message: isIdCorrect.message });
+  }
+  const response = await salesModel.findByIdSales(saleId);
+  res.status(200).json(response);
+});
+
 app.post('/sales', async (req, res) => {
   const { body } = req;
   const bodySucess = salesController.validInsert(body);

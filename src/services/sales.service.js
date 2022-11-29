@@ -1,4 +1,5 @@
 const productModel = require('../models/products.model');
+const salesModel = require('../models/sales.models');
 
 const validID = async (body) => {
   let err = false;
@@ -16,4 +17,10 @@ const validID = async (body) => {
   if (!err) return { type: true }; return err;
 };
 
-module.exports = { validID };
+const validSaleId = async (id) => {
+  const result = await salesModel.findByIdSales(id);
+  if (!result[0]) return { type: false, error: 404, message: 'Sale not found' };
+  return { type: true };
+};
+
+module.exports = { validID, validSaleId };
