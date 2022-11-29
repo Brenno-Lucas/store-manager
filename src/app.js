@@ -75,4 +75,21 @@ app.post('/sales', async (req, res) => {
   return res.status(201).json(responseOk);
 });
 
+app.put('/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const correctID = await productsService.checkID(id);
+  if (!correctID.type) {
+    return res.status(correctID.error).json({ message: correctID.message });
+  }
+  const { body } = req;
+  const correctBody = await productController.checkName(body);
+  if (!correctBody.type) {
+    return res
+      .status(correctBody.error)
+      .json({ message: correctBody.message });
+  }
+  await productsModel.updateProduct(body, id);
+  res.status(200).json({ id, name: body.name });
+});
+
 module.exports = app;
