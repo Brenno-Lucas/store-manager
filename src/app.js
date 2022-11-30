@@ -92,4 +92,14 @@ app.put('/products/:id', async (req, res) => {
   res.status(200).json({ id, name: body.name });
 });
 
+app.delete('/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const correctID = await productsService.checkID(id);
+  if (!correctID.type) {
+    return res.status(correctID.error).json({ message: correctID.message });
+  }
+  await productsModel.removeProduct(id);
+  res.status(204).end();
+});
+
 module.exports = app;
